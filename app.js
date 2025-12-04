@@ -238,3 +238,76 @@ function loadSettings() {
     state.settings = { ...DEFAULT_SETTINGS };
   }
 }
+function saveSettings() {
+  try {
+    localStorage.setItem(
+      "pantryClean_settings",
+      JSON.stringify(state.settings)
+    );
+    state.unitSystem = state.settings.unitSystem;
+  } catch (e) {}
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast"),
+    toastMsg = document.getElementById("toastMessage"),
+    icon = toast.querySelector(".toast-icon");
+  toastMsg.textContent = message;
+  icon.textContent = type === "success" ? "✓" : type === "error" ? "✗" : "ℹ";
+  icon.style.background =
+    type === "success"
+      ? "var(--color-success)"
+      : type === "error"
+      ? "var(--color-danger)"
+      : "var(--color-teal)";
+  toast.hidden = false;
+  setTimeout(() => {
+    toast.hidden = true;
+  }, 3000);
+}
+
+function parseQuantity(text) {
+  if (!text) return null;
+  let t = text.trim();
+  for (const [frac, val] of Object.entries(UNICODE_FRACTIONS)) {
+    if (t.includes(frac)) {
+      const m = t.match(new RegExp(`(\\d+)\\s*${frac}`));
+      if (m)
+        return { value: parseInt(m[1]) + val, original: m[0], isRange: false };
+      return { value: val, original: frac, isRange: false };
+    }
+  }
+  let m = t.match(/(\d+(?:\.\d+)?)\s*[-–—]\s*(\d+(?:\.\d+)?)/);
+  if (m)
+    return {
+      value: (parseFloat(m[1]) + parseFloat(m[2])) / 2,
+      original: m[0],
+      isRange: true,
+      min: parseFloat(m[1]),
+      max: parseFloat(m[2]),
+    };
+  m = t.match(/(\d+)\s+(\d+)\/(\d+)/);
+  if (m)
+    return {
+      value: parseInt(m[1]) + parseInt(m[2]) / parseInt(m[3]),
+      original: m[0],
+      isRange: false,
+    };
+  m = t.match(/(\d+)\/(\d+)/);
+  if (m)
+    return {
+      value: parseInt(m[1]) / parseInt(m[2]),
+      original: m[0],
+      isRange: false,
+    };
+  m = t.match(/(\d+(?:\.\d+)?)/);
+  if (m) return { value: parseFloat(m[1]), original: m[0], isRange: false };
+  const words = t.toLowerCase().split(/\s+/);
+  if (words[0] && NUMBER_WORDS[words[0]] !== undefined)
+    return {
+      value: NUMBER_WORDS[words[0]],
+      original: words[0],
+      isRange: false,
+    };
+  return null;
+}
