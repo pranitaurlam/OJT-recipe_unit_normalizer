@@ -396,3 +396,65 @@ function roundToPrecision(n) {
   const m = Math.pow(10, state.settings.decimalPrecision);
   return Math.round(n * m) / m;
 }
+
+function convertVolumeToPreferred(ml, s) {
+  const pu = s.preferredVolumeUnit,
+    su = s.smallQuantityUnit;
+  if (ml < 15 && su !== "ml")
+    return su === "teaspoon"
+      ? { quantity: roundToPrecision(ml / 4.929), unit: "teaspoon" }
+      : { quantity: roundToPrecision(ml / 14.787), unit: "tablespoon" };
+  switch (pu) {
+    case "ml":
+      return { quantity: roundToPrecision(ml), unit: "ml" };
+    case "liter":
+      return ml >= 100
+        ? { quantity: roundToPrecision(ml / 1000), unit: "liter" }
+        : { quantity: roundToPrecision(ml), unit: "ml" };
+    case "cup":
+      return ml >= 59
+        ? { quantity: roundToPrecision(ml / 236.588), unit: "cup" }
+        : ml >= 14
+        ? { quantity: roundToPrecision(ml / 14.787), unit: "tablespoon" }
+        : { quantity: roundToPrecision(ml / 4.929), unit: "teaspoon" };
+    case "tablespoon":
+      return ml >= 14
+        ? { quantity: roundToPrecision(ml / 14.787), unit: "tablespoon" }
+        : { quantity: roundToPrecision(ml / 4.929), unit: "teaspoon" };
+    case "teaspoon":
+      return { quantity: roundToPrecision(ml / 4.929), unit: "teaspoon" };
+    default:
+      return { quantity: roundToPrecision(ml), unit: "ml" };
+  }
+}
+
+function convertWeightToPreferred(g, s) {
+  switch (s.preferredWeightUnit) {
+    case "g":
+      return { quantity: roundToPrecision(g), unit: "g" };
+    case "kg":
+      return g >= 100
+        ? { quantity: roundToPrecision(g / 1000), unit: "kg" }
+        : { quantity: roundToPrecision(g), unit: "g" };
+    case "oz":
+      return { quantity: roundToPrecision(g / 28.3495), unit: "oz" };
+    case "lb":
+      return g >= 227
+        ? { quantity: roundToPrecision(g / 453.592), unit: "lb" }
+        : { quantity: roundToPrecision(g / 28.3495), unit: "oz" };
+    default:
+      return { quantity: roundToPrecision(g), unit: "g" };
+  }
+}
+
+function convertToSystem(qty, unit) {
+  if (!unit || !UNIT_CONVERSIONS[unit])
+    return { quantity: roundToPrecision(qty), unit };
+  const ui = UNIT_CONVERSIONS[unit];
+  if (ui.type === "count") return { quantity: roundToPrecision(qty), unit };
+  if (ui.type === "volume" && ui.toMl)
+    return convertVolumeToPreferred(qty * ui.toMl, state.settings);
+  if (ui.type === "weight" && ui.toG)
+    return convertWeightToPreferred(qty * ui.toG, state.settings);
+  return { quantity: roundToPrecision(qty), unit };
+}
