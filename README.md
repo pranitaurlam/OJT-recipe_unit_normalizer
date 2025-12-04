@@ -8,14 +8,9 @@
 ✔ Future roadmap
 ✔ License (MIT)
 
-⸻
-
 ✅ Your Complete README.md
 
 (You can copy-paste directly into GitHub)
-
-⸻
-
 
 # 🧪 PantryClean — Recipe Ingredient Normalizer
 
@@ -23,8 +18,6 @@ PantryClean is a **client-side recipe parsing tool** that converts messy ingredi
 It automatically detects **quantities, units, ingredient names, health alternatives, and ambiguity flags** — while keeping everything stored **locally in the browser**.
 
 > ⚡ No backend. No database. No tracking. Everything happens locally.
-
----
 
 ## 🍽️ What PantryClean Does
 
@@ -41,8 +34,6 @@ It automatically detects **quantities, units, ingredient names, health alternati
 | LocalStorage persistence (no server) | ✅ |
 | Responsive UI with dark/light theme | ✅ |
 
----
-
 ## 🏗️ Tech Stack
 
 | Layer | Technology |
@@ -52,8 +43,6 @@ It automatically detects **quantities, units, ingredient names, health alternati
 | Storage | LocalStorage |
 | UX | Tooltip parsing, modals, keyboard shortcuts |
 | CSS Features | CSS variables, accessibility rules, responsive layout |
-
----
 
 ## 📁 Project Structure
 
@@ -119,8 +108,6 @@ Ingredient: coriander
 Flags: none
 
 
-⸻
-
 ⚙️ Settings
 
 Users can customize:
@@ -132,7 +119,6 @@ Users can customize:
 
 All preferences are saved automatically.
 
-⸻
 
 💾 Data Persistence
 	•	Saved parsing corrections are stored under:
@@ -145,7 +131,6 @@ localStorage.pantryClean_settings
 
 No backend is used — everything lives on the user’s device.
 
-⸻
 
 🧰 Keyboard Shortcuts
 
@@ -155,8 +140,6 @@ Esc	Close active modal
 S	Open Settings
 
 
-⸻
-
 📤 Export Options
 
 Format	Example Use
@@ -165,8 +148,6 @@ JSON	Grocery apps, automation
 Clipboard text	Quick sharing or notes
 
 
-⸻
-
 🧩 Future Improvements (Roadmap)
 	•	AI category tagging (vegetable, protein, spice, dairy, etc.)
 	•	Shopping list grouping by aisle
@@ -174,7 +155,6 @@ Clipboard text	Quick sharing or notes
 	•	Multi-language ingredient dictionary
 	•	Nutrition estimation API mode
 
-⸻
 
 📸 Screenshots
 
@@ -185,27 +165,22 @@ Clipboard text	Quick sharing or notes
 ![Settings Panel](images/settings.png)
 
 
-⸻
-
 🧑‍💻 Contributing
 
 Pull requests are welcome!
 Open an issue for bugs, enhancements, or new feature proposals.
 
-⸻
 
 📜 License
 
 MIT License — free to use, modify, and distribute.
 
-⸻
 
 🌟 Credits
 
 Built by Shridhar Panigrahi
 Designed for clean cooking workflows, automation, and digital recipe storage.
 
----
 
 ### Want me to:
 
