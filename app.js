@@ -735,3 +735,66 @@ function openEditorModal(idx) {
   document.getElementById("editorModal").hidden = false;
   setTimeout(() => qi.focus(), 100);
 }
+
+function closeEditorModal() {
+  document.getElementById("editorModal").hidden = true;
+  state.currentEditIndex = -1;
+}
+function openCorrectionsModal() {
+  renderCorrectionsList();
+  document.getElementById("correctionsModal").hidden = false;
+}
+function closeCorrectionsModal() {
+  document.getElementById("correctionsModal").hidden = true;
+}
+function openSettingsModal() {
+  populateSettingsModal();
+  document.getElementById("settingsModal").hidden = false;
+}
+function closeSettingsModal() {
+  document.getElementById("settingsModal").hidden = true;
+}
+
+function populateSettingsModal() {
+  document
+    .querySelectorAll('input[name="defaultSystem"]')
+    .forEach((r) => (r.checked = r.value === state.settings.unitSystem));
+  document.getElementById("preferredVolumeUnit").value =
+    state.settings.preferredVolumeUnit;
+  document.getElementById("preferredWeightUnit").value =
+    state.settings.preferredWeightUnit;
+  document.getElementById("decimalPrecision").value =
+    state.settings.decimalPrecision;
+  document.getElementById("smallQuantityUnit").value =
+    state.settings.smallQuantityUnit;
+}
+
+function saveSettingsFromModal() {
+  const sr = document.querySelector('input[name="defaultSystem"]:checked');
+  state.settings = {
+    unitSystem: sr?.value || "metric",
+    preferredVolumeUnit: document.getElementById("preferredVolumeUnit").value,
+    preferredWeightUnit: document.getElementById("preferredWeightUnit").value,
+    decimalPrecision: parseInt(
+      document.getElementById("decimalPrecision").value
+    ),
+    smallQuantityUnit: document.getElementById("smallQuantityUnit").value,
+  };
+  saveSettings();
+  const inp = document.getElementById("recipeInput").value;
+  if (inp.trim()) {
+    state.parsedIngredients = parseAllIngredients(inp);
+    renderResults();
+  }
+  closeSettingsModal();
+  showToast("Settings saved!");
+}
+
+function resetSettingsToDefaults() {
+  if (confirm("Reset all settings to defaults?")) {
+    state.settings = { ...DEFAULT_SETTINGS };
+    saveSettings();
+    populateSettingsModal();
+    showToast("Settings reset");
+  }
+}
