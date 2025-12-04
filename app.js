@@ -643,3 +643,95 @@ function generateSuggestions(ing) {
         note: `${ing.quantity} eggs`,
       });
   }
+if (lo.includes("pinch")) {
+    s.push({ quantity: 0.5, unit: "g", note: "Pinch ≈ 0.5g" });
+    s.push({ quantity: 1, unit: "g", note: "Generous pinch ≈ 1g" });
+  }
+  if (lo.includes("to taste")) {
+    s.push({ quantity: 1, unit: "teaspoon", note: "Typical amount" });
+    s.push({ quantity: 0.5, unit: "teaspoon", note: "Conservative" });
+  }
+  if (lo.includes("bunch"))
+    s.push({ quantity: 30, unit: "g", note: "1 bunch ≈ 30g" });
+  if (ing.isRange) {
+    const mid = (ing.quantityMin + ing.quantityMax) / 2;
+    s.push({
+      quantity: mid,
+      unit: ing.unit || "piece",
+      note: `Midpoint ${ing.quantityMin}-${ing.quantityMax}`,
+    });
+  }
+  return s;
+}
+
+function openEditorModal(idx) {
+  const ing = state.parsedIngredients[idx];
+  if (!ing) return;
+  state.currentEditIndex = idx;
+  document.getElementById("editorOriginalText").textContent = ing.original;
+  document.getElementById(
+    "editorParsedPreview"
+  ).innerHTML = `<span class="qty">${
+    ing.displayQuantity !== null ? formatNumber(ing.displayQuantity) : "?"
+  }</span><span class="unit">${
+    ing.displayUnit || "no unit"
+  }</span><span class="ing">${ing.ingredient}</span>`;
+  const re = document.getElementById("editorAmbiguityReason");
+  if (ing.ambiguous) {
+    re.textContent = ing.ambiguityReasons.join("; ");
+    re.parentElement.style.display = "block";
+  } else if (ing.corrected) {
+    re.textContent = "Using correction: " + ing.correctionNote;
+    re.parentElement.style.display = "block";
+  } else re.parentElement.style.display = "none";
+  const sl = document.getElementById("suggestionList"),
+    sug = generateSuggestions(ing);
+  if (sug.length) {
+    sl.innerHTML = sug
+      .map(
+        (s, i) =>
+          `<div class="suggestion-item"><input type="radio" name="suggestion" id="sug-${i}" data-qty="${
+            s.quantity
+          }" data-unit="${s.unit}" data-note="${escapeHtml(
+            s.note
+          )}"><label for="sug-${i}">${s.quantity} ${s.unit} - ${
+            s.note
+          }</label></div>`
+      )
+      .join("");
+    document.getElementById("editorSuggestions").style.display = "block";
+  } else {
+    sl.innerHTML = "";
+    document.getElementById("editorSuggestions").style.display = "none";
+  }
+  const qi = document.getElementById("customQuantity"),
+    us = document.getElementById("customUnit");
+  qi.value = ing.displayQuantity ?? ing.quantity ?? "";
+  const vu = [
+    "g",
+    "kg",
+    "oz",
+    "lb",
+    "ml",
+    "liter",
+    "cup",
+    "tablespoon",
+    "teaspoon",
+    "piece",
+    "clove",
+    "bunch",
+    "pinch",
+    "dash",
+    "slice",
+    "sprig",
+  ];
+  us.value = vu.includes(ing.displayUnit || ing.unit || "")
+    ? ing.displayUnit || ing.unit
+    : "";
+  document.getElementById("customNote").value = "";
+  document
+    .querySelectorAll('input[name="suggestion"]')
+    .forEach((r) => (r.checked = false));
+  document.getElementById("editorModal").hidden = false;
+  setTimeout(() => qi.focus(), 100);
+}
