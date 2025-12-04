@@ -216,4 +216,4 @@ Designed for clean cooking workflows, automation, and digital recipe storage.
 
 Just say:
 
-> **"Deploy version"** or **"Make it a PWA"** 🚀
+> https://ojt-recipeunitnormalizer.vercel.app/
