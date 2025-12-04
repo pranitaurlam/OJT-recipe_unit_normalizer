@@ -583,3 +583,63 @@ function renderResults() {
   document.getElementById("exportCsvBtn").disabled = false;
   document.getElementById("copyClipboardBtn").disabled = false;
 }
+
+function renderCorrectionsList() {
+  const c = document.getElementById("correctionsList"),
+    keys = Object.keys(state.corrections);
+  if (!keys.length) {
+    c.innerHTML =
+      '<div class="corrections-empty"><p>No saved corrections yet.</p></div>';
+    return;
+  }
+  c.innerHTML = keys
+    .map(
+      (k) =>
+        `<div class="correction-item"><div><div class="correction-key">"${escapeHtml(
+          k
+        )}"</div><div class="correction-value">→ ${
+          state.corrections[k].quantity
+        } ${
+          state.corrections[k].unit
+        }</div></div><div class="correction-actions"><button class="delete-correction-btn" data-key="${escapeHtml(
+          k
+        )}"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2"/></svg></button></div></div>`
+    )
+    .join("");
+  c.querySelectorAll(".delete-correction-btn").forEach((b) => {
+    b.addEventListener("click", () => {
+      delete state.corrections[b.dataset.key];
+      saveCorrections();
+      renderCorrectionsList();
+      showToast("Deleted");
+      const inp = document.getElementById("recipeInput").value;
+      if (inp.trim()) {
+        state.parsedIngredients = parseAllIngredients(inp);
+        renderResults();
+      }
+    });
+  });
+}
+
+function generateSuggestions(ing) {
+  const s = [],
+    lo = ing.original.toLowerCase();
+  if (lo.includes("onion"))
+    s.push(
+      lo.includes("small")
+        ? { quantity: 60, unit: "g", note: "Small onion ≈ 60g" }
+        : lo.includes("large")
+        ? { quantity: 150, unit: "g", note: "Large onion ≈ 150g" }
+        : { quantity: 100, unit: "g", note: "Medium onion ≈ 100g" }
+    );
+  if (lo.includes("garlic"))
+    s.push({ quantity: 4, unit: "g", note: "1 clove ≈ 4g" });
+  if (lo.includes("egg")) {
+    s.push({ quantity: 50, unit: "g", note: "1 egg ≈ 50g" });
+    if (ing.quantity)
+      s.push({
+        quantity: ing.quantity * 50,
+        unit: "g",
+        note: `${ing.quantity} eggs`,
+      });
+  }
