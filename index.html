@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="PantryClean - Transform messy recipe text into clean, structured ingredients with smart parsing and unit normalization."
+    />
+    <title>PantryClean | Recipe Ingredient Normalizer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="landing-page">
+    <!-- Skip Link for Accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <nav
+      class="navbar navbar-landing"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div class="container nav-container">
+        <a href="#" class="logo" aria-label="PantryClean Home">
+          <!-- Leaf/Kitchen Icon SVG -->
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 32 32"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="16"
+              cy="16"
+              r="14"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M10 16c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <path
+              d="M16 10v12M12 14l4-4 4 4"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <span>PantryClean</span>
+        </a>
+        <div class="nav-links">
+          <!-- Theme Toggle -->
+          <button 
+            class="theme-toggle" 
+            id="themeToggle" 
+            aria-label="Toggle dark/light mode"
+            title="Toggle theme"
+          >
+            <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          
+          <a href="app.html" class="btn btn-primary btn-sm">Open App</a>
+        </div>
+        <button
+          class="mobile-menu-btn"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+          onclick="document.getElementById('mobileMenu').classList.toggle('active'); this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'true' ? 'false' : 'true');"
+        >
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M3 12h18M3 6h18M3 18h18" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div
+      class="mobile-menu"
+      id="mobileMenu"
+      role="dialog"
+      aria-label="Mobile navigation"
+    >
+      <button 
+        class="theme-toggle theme-toggle-mobile" 
+        id="themeToggleMobile" 
+        aria-label="Toggle dark/light mode"
+      >
+        <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+        <span>Toggle Theme</span>
+      </button>
+      <a href="app.html" class="btn btn-primary">Open App</a>
+    </div>
+
+    <main id="main-content">
+      <!-- Hero Section -->
+      <section class="hero hero-gradient" id="hero">
+        <div class="container">
+          <div class="hero-content">
+            <span class="hero-badge">✨ Free & Open Source</span>
+            <h1 class="hero-title">
+              Transform Messy Recipes into<br /><span class="highlight"
+                >Clean, Structured Data</span
+              >
+            </h1>
+            <p class="hero-subtitle">
+              Paste any recipe text and instantly get normalized ingredients
+              with smart unit conversion, ambiguity detection, and export-ready
+              formats. No signup required.
+            </p>
+            <div class="hero-cta">
+              <a href="app.html" class="btn btn-primary btn-lg">
+                Open App
+              </a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat">
+                <span class="stat-value">100%</span>
+                <span class="stat-label">Client-side</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">Free</span>
+                <span class="stat-label">Forever</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">0</span>
+                <span class="stat-label">Data sent</span>
+              </div>
+            </div>
+          </div>
+          <div class="hero-visual">
+            <div class="preview-card">
+              <div class="preview-header">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+              </div>
+              <div class="preview-content">
+                <div class="preview-input">
+                  <code>2 tbsp chopped fresh coriander</code>
+                  <code>1 small onion, finely chopped</code>
+                  <code>½ cup milk</code>
+                </div>
+                <div class="preview-arrow">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M5 12h14M12 5l7 7-7 7"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+                <div class="preview-output">
+                  <div class="preview-row">
+                    <span class="qty">30</span>
+                    <span class="unit">ml</span>
+                    <span class="ing">coriander</span>
+                  </div>
+                  <div class="preview-row flagged">
+                    <span class="qty">60</span>
+                    <span class="unit">g</span>
+                    <span class="ing">onion</span>
+                    <span class="flag">⚠️</span>
+                  </div>
+                  <div class="preview-row">
+                    <span class="qty">118</span>
+                    <span class="unit">ml</span>
+                    <span class="ing">milk</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 32 32"
+              fill="none"
+              aria-hidden="true"
+            >
+              <circle
+                cx="16"
+                cy="16"
+                r="14"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+              <path
+                d="M10 16c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M16 10v12M12 14l4-4 4 4"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>PantryClean</span>
+          </div>
+          <p class="privacy-note">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="3"
+                y="7"
+                width="10"
+                height="7"
+                rx="1"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <path
+                d="M5 7V5a3 3 0 116 0v2"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              />
+            </svg>
+            No data leaves your browser — everything stored locally.
+          </p>
+          <p class="footer-credit">Built with vanilla HTML, CSS & JavaScript</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+      (function() {
+        const THEME_KEY = 'pantryClean_theme';
+        
+        // Get saved theme or default to 'dark' for landing page aesthetic
+        function getSavedTheme() {
+          return localStorage.getItem(THEME_KEY) || 'dark';
+        }
+        
+        // Apply theme to document
+        function applyTheme(theme) {
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem(THEME_KEY, theme);
+          
+          // Update all toggle buttons
+          const toggles = document.querySelectorAll('.theme-toggle');
+          toggles.forEach(toggle => {
+            toggle.setAttribute('aria-pressed', theme === 'light');
+          });
+        }
+        
+        // Toggle between themes
+        function toggleTheme() {
+          const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          applyTheme(newTheme);
+        }
+        
+        // Initialize theme on page load
+        document.addEventListener('DOMContentLoaded', function() {
+          const savedTheme = getSavedTheme();
+          applyTheme(savedTheme);
+          
+          // Add click handlers to all theme toggles
+          document.querySelectorAll('.theme-toggle').forEach(toggle => {
+            toggle.addEventListener('click', toggleTheme);
+          });
+        });
+        
+        // Apply theme immediately to prevent flash
+        applyTheme(getSavedTheme());
+      })();
+    </script>
+  </body>
+</html>
